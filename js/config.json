@@ -1,0 +1,33 @@
+{
+  "archivoShader": "humo.txt",
+  "frecuencia": 7.0,
+  "velocidad": 1.0,
+  "oscilacion": {
+    "habilitado": false,
+    "frecuencia": 0.4,
+    "rango": 2.2
+  },
+  "transformacion": {
+    "zoom": 1.0,
+    "rotacion": 0.0
+  },
+  "usarColoresPersonalizados": true
+ ,
+  "colores": {
+    "base": [0.21, 0.06, 0.06],
+    "medio": [0.65, 0.12, 0.08],
+    "brillante": [1.0, 0.45, 0.15],
+    "brillo": 1.0,
+    "contraste": 1.0,
+    "saturacion": 1.0,
+    "invertirColores": false
+  },
+  "extras": {
+    "resolucionEscala": 0.70,
+    "usarVineta": false,
+    "fuerzaVineta": 0.28,
+    "oscuridadVineta": 0.35,
+    "corteBanda1": [0.08, 0.45],
+    "corteBanda2": [0.55, 0.85]
+  }
+}
