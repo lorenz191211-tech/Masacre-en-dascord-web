@@ -1,0 +1,96 @@
+shader_type canvas_item;
+
+uniform vec3 colorA : source_color = vec3(0.2, 0.0, 0.1);
+uniform vec3 colorB : source_color = vec3(0.7, 0.3, 0.4);
+uniform vec3 colorC : source_color = vec3(1.0, 0.2, 0.4);
+uniform bool discomode = false;
+uniform float speed : hint_range(0.1, 2.0) = 1.0;
+
+#define iTime (TIME * speed)
+
+// Hash aleatorio optimizado para 3D
+float rand(vec3 p) {
+    return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
+}
+
+// Ruido 3D optimizado (8 esquinas en lugar de 16, el doble de rápido)
+float smoothnoise(vec3 p) {
+    vec3 i = floor(p);
+    vec3 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    
+    float n000 = rand(i + vec3(0.0, 0.0, 0.0));
+    float n100 = rand(i + vec3(1.0, 0.0, 0.0));
+    float n010 = rand(i + vec3(0.0, 1.0, 0.0));
+    float n110 = rand(i + vec3(1.0, 1.0, 0.0));
+    float n001 = rand(i + vec3(0.0, 0.0, 1.0));
+    float n101 = rand(i + vec3(1.0, 0.0, 1.0));
+    float n011 = rand(i + vec3(0.0, 1.0, 1.0));
+    float n111 = rand(i + vec3(1.0, 1.0, 1.0));
+    
+    float nx0 = mix(mix(n000, n100, f.x), mix(n010, n110, f.x), f.y);
+    float nx1 = mix(mix(n001, n101, f.x), mix(n011, n111, f.x), f.y);
+    
+    return mix(nx0, nx1, f.z);
+}
+
+float fbm(vec3 x) {
+    float v = 0.0;
+    float a = 0.5;
+    vec3 shift = vec3(1.0);
+    // 3 iteraciones: fluidez total en móviles y PC sin perder detalle visual
+    for (int i = 0; i < 3; ++i) {
+        v += a * smoothnoise(x);
+        x = x * 2.0 + shift + vec3(iTime * 0.05);
+        a *= 0.5;
+    }
+    return v;
+}
+
+vec3 uvTo3D(vec2 uv) {
+    float theta = uv.x * 6.28318530718;
+    float phi = uv.y * 3.14159265359;
+    return vec3(sin(phi) * cos(theta), sin(phi) * sin(theta), cos(phi));
+}
+
+float max3 (vec3 v) {
+  return max(max(v.x, v.y), v.z);
+}
+
+void fragment() {
+    // Colores de respaldo seguros para evitar pantallas negras si el JSON/JS no los mapea aún
+    vec3 col_a = (length(colorA) < 0.01) ? vec3(0.2, 0.0, 0.1) : colorA;
+    vec3 col_b = (length(colorB) < 0.01) ? vec3(0.7, 0.3, 0.4) : colorB;
+    vec3 col_c = (length(colorC) < 0.01) ? vec3(1.0, 0.2, 0.4) : colorC;
+    
+    if(discomode){
+        col_a = vec3(sin(iTime), sin(iTime + 7.0), cos(iTime));
+        col_b = vec3(cos(iTime), cos(iTime + 7.0), sin(iTime));
+        col_c = vec3(sin(iTime), cos(iTime), sin(iTime + 0.5));
+    }
+    
+    vec2 uv = UV;
+    vec3 pos = uvTo3D(uv);
+    
+    pos += vec3(cos(iTime / 5.0), sin(iTime / 5.0), sin(iTime / 5.0));
+    
+    float fbmm = fbm(pos);
+    vec3 q = vec3(fbmm, sin(fbmm), cos(fbmm));
+    vec3 r = q; 
+    float v = fbm(pos + 5.0 * r + iTime * 0.005);
+    
+    vec3 col_top = vec3(1.0);
+    vec3 col_bot = vec3(0.0);
+    
+    vec3 res_color = mix(col_a, col_b, clamp(r, 0.0, 1.0));
+    res_color = mix(res_color, col_c, clamp(q, 0.0, 1.0));
+    
+    float poss = v * 2.0 - 1.0;
+    res_color = mix(res_color, col_top, clamp(poss, 0.0, 1.0));
+    res_color = mix(res_color, col_bot, clamp(-poss, 0.0, 1.0));
+    
+    res_color = res_color / max(max3(res_color), 0.001);
+    res_color = (clamp((0.4 * pow(v, 3.0) + pow(v, 2.0) + 0.5 * v), 0.0, 1.0) * 0.9 + 0.1) * res_color;
+
+    COLOR = vec4(res_color, 1.0);
+}
