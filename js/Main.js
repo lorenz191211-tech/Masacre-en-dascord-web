@@ -1,39 +1,84 @@
-AudioManager.init();
+/*
+====================================
+    AUDIO MANAGER
+====================================
+*/
 
-document.getElementById("music-btn").onclick = () => {
-    AudioManager.toggle();
-};
-document.addEventListener("DOMContentLoaded", () => {
-    // --- CONTROL DE MÚSICA E ICONO ---
-    const musicBtn = document.getElementById("music-btn");
-    const musicIcon = document.getElementById("music-icon");
+window.AudioManager = {
 
-    if (musicBtn && musicIcon) {
-        musicBtn.onclick = () => {
-            // Alternar estado en AudioManager
-            if (typeof AudioManager !== "undefined") {
-                const isPlaying = AudioManager.toggle(); 
-                
-                // Cambiar imagen según el estado de reproducción
-                musicIcon.src = isPlaying ? "assets/UI/musicon.png" : "assets/UI/musicoff.png";
-            }
-        };
+    audio: null,
+
+    enabled: false,
+
+    volume: 0.45,
+
+    src: "assets/audios/DarrellBoss.ogg",
+
+    init() {
+
+        console.log("AudioManager iniciado");
+
+        this.audio = new Audio();
+
+        this.audio.loop = true;
+
+        this.audio.preload = "auto";
+
+        this.audio.volume = this.volume;
+
+        this.audio.src = this.src;
+
+        this.updateButton();
+
+    },
+
+    toggle() {
+
+        this.enabled = !this.enabled;
+
+        if (this.enabled) {
+
+            this.audio.play()
+
+            .catch(error => {
+
+                console.log("Error al reproducir audio:", error);
+
+                this.enabled = false;
+
+                this.updateButton(); // Devuelve el icono a musicoff si falla el audio
+
+            });
+
+        } else {
+
+            this.audio.pause();
+
+            this.audio.currentTime = 0;
+
+        }
+
+        this.updateButton();
+
+        return this.enabled;
+
+    },
+
+    updateButton() {
+
+        // Buscar la imagen por ID o seleccionándola dentro del botón
+        const img = document.getElementById("music-icon") || document.querySelector("#music-btn img");
+
+        if (!img) return;
+
+        // Cambiar la ruta de la imagen en lugar de textContent
+        img.src = this.enabled 
+            ? "assets/UI/musicon.png" 
+            : "assets/UI/musicoff.png";
+
     }
 
-    // --- CONTROL DE TV RETRO ---
-    const tvBtn = document.getElementById("tv-btn");
-
-    if (tvBtn) {
-        tvBtn.onclick = () => {
-            const isRetro = document.body.classList.toggle("retro-tv");
-            tvBtn.classList.toggle("active", isRetro);
-            localStorage.setItem("retroTVMode", isRetro);
-        };
-
-        // Restaurar estado guardado
-        if (localStorage.getItem("retroTVMode") === "true") {
-            document.body.classList.add("retro-tv");
-            tvBtn.classList.add("active");
+};
         }
     }
 });
