@@ -12,7 +12,7 @@ window.AudioManager = {
 
     volume: 0.45,
 
-    src: "assets/audios/DarrellBoss.ogg",
+    src: "./assets/audios/DarrellBoss.ogg",
 
     init() {
 
@@ -73,8 +73,8 @@ window.AudioManager = {
 
         // Cambiar la ruta de la imagen en lugar de textContent
         img.src = this.enabled 
-            ? "assets/UI/musicon.png" 
-            : "assets/UI/musicoff.png";
+            ? "./assets/ui/musicon.png" 
+            : "./assets/ui/musicoff.png";
 
     }
 
