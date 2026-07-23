@@ -1,84 +1,65 @@
-/*
-====================================
-    AUDIO MANAGER
-====================================
-*/
+<!DOCTYPE html>
+<html lang="es">
 
-window.AudioManager = {
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="color-scheme" content="dark">
+    <title>Med Web</title>
 
-    audio: null,
+    <link rel="stylesheet" href="./css/background.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
 
-    enabled: false,
+<body>
 
-    volume: 0.45,
+    <!-- MENÚ PRINCIPAL -->
+    <div class="mainMenu">
+        <div class="title-container">
+    <img src="./assets/ui/titulo.png" class="game-logo" alt="Logo">
+    <h2 class="game-subtitle">Nahum saca cap</h2>
+    <hr>
+</div>
 
-    src: "assets/audios/DarrellBoss.ogg",
+        <div class="gameMenu">
+            <button>DESCARGAR</button>
+            <button>GUIA</button>
+            <button>DISCORD</button>
+            <button>VERSIONES</button>
+            <button>CRÉDITOS</button>
+        </div>
 
-    init() {
+        
+<!-- CONTROLES DE LA UI -->
+<div class="ui-controls">
+    <!-- Botón de música -->
+    <button id="music-btn" class="ui-btn" title="Música">
+        <img id="music-icon" src="./assets/ui/musicoff.png" alt="Música">
+    </button>
+    
+    <!-- Botón para TV Retro -->
+    <button id="tv-btn" class="ui-btn" title="Activar/Desactivar TV Retro">
+        <img id="tv-icon" src="./assets/ui/tv.png" alt="TV Retro">
+    </button>
+</div>
 
-        console.log("AudioManager iniciado");
+<!-- Capa para el efecto visual de líneas de escaneo (CRT) -->
+<div id="crt-overlay" class="crt-overlay"></div>
 
-        this.audio = new Audio();
+ <!-- Fondo en Canvas para simular el Shader exacto del juego -->
+<canvas id="smokeCanvas"></canvas>
 
-        this.audio.loop = true;
+<div class="mainMenu">
+    <!-- Tu menú aquí -->
+</div>
 
-        this.audio.preload = "auto";
+    <script src="./js/audio.js" defer></script>
+    <script src="./js/puntero.js" defer></script>
+    <script src="./js/main.js" defer></script>
+    <script src="./js/smokeshader.js"></script>
 
-        this.audio.volume = this.volume;
+</body>
 
-        this.audio.src = this.src;
-
-        this.updateButton();
-
-    },
-
-    toggle() {
-
-        this.enabled = !this.enabled;
-
-        if (this.enabled) {
-
-            this.audio.play()
-
-            .catch(error => {
-
-                console.log("Error al reproducir audio:", error);
-
-                this.enabled = false;
-
-                this.updateButton(); // Devuelve el icono a musicoff si falla el audio
-
-            });
-
-        } else {
-
-            this.audio.pause();
-
-            this.audio.currentTime = 0;
-
-        }
-
-        this.updateButton();
-
-        return this.enabled;
-
-    },
-
-    updateButton() {
-
-        // Buscar la imagen por ID o seleccionándola dentro del botón
-        const img = document.getElementById("music-icon") || document.querySelector("#music-btn img");
-
-        if (!img) return;
-
-        // Cambiar la ruta de la imagen en lugar de textContent
-        img.src = this.enabled 
-            ? "assets/UI/musicon.png" 
-            : "assets/UI/musicoff.png";
-
-    }
-
-};
-        }
-    }
-});
+</html>
+     
