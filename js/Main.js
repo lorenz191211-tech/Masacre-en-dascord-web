@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isPlaying = AudioManager.toggle(); 
                 
                 // Cambiar imagen según el estado de reproducción
-                musicIcon.src = isPlaying ? "assets/ui/musicon.png" : "assets/ui/musicoff.png";
+                musicIcon.src = isPlaying ? "assets/UI/musicon.png" : "assets/UI/musicoff.png";
             }
         };
     }
@@ -37,4 +37,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
-
