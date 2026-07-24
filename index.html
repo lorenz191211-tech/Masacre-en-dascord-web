@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="./css/background.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="preload" href="js/config.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
@@ -18,7 +20,7 @@
     <div class="mainMenu">
         <div class="title-container">
     <img src="./assets/ui/titulo.svg" class="game-logo" alt="Logo">
-    <h2 class="game-subtitle">Nahum saca cap</h2>
+    <h2 id="game-subtitle" class="game-subtitle"></h2>
     <hr>
 </div>
 
@@ -57,7 +59,7 @@
     <script src="./js/audio.js" defer></script>
     <script src="./js/puntero.js" defer></script>
     <script src="./js/main.js" defer></script>
-    <script src="./js/smokeshader.js"></script>
+    <script src="./js/smokeshader.js" defer></script>
 
 </body>
 
