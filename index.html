@@ -10,14 +10,38 @@
     <!-- Compatibilidad forzada para usar el motor de renderizado más moderno en navegadores basados en Chromium/Edge -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
+    <!-- ==========================================
+         FAVICONS Y ICONOS PARA DISPOSITIVOS
+    =========================================== -->
+    <!-- Favicon estándar para navegadores -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/ui/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/ui/favicon-16x16.png">
+    <!-- Icono para dispositivos Apple / Pantalla de inicio -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/favicon-32x32.png">
+    <!-- Icono para anclaje en Windows -->
+    <meta name="msapplication-TileColor" content="#000000">
+
     <!-- Optimizaciones de App Web para Móviles (PWA) -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Masacre en Dascord página web">
     <meta name="theme-color" content="#000000">
     <meta name="color-scheme" content="dark">
     
-       <!-- ==========================================
+    <!-- Enlace al manifest de la PWA -->
+    <!--link rel="manifest" href="./manifest.json"-->
+    
+    <!-- Metadatos de adaptabilidad avanzada, caché y rendimiento -->
+    <meta http-equiv="content-language" content="es">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- ==========================================
          METADATOS SEO Y PREVISUALIZADORES DE ENLACES
     =========================================== -->
 
@@ -32,12 +56,12 @@
     <meta property="og:title" content="Masacre en Dascord página web">
     <meta property="og:description" content="La página oficial de &quot;Masacre en Dascord&quot; donde unos inadaptados sociales se la pasan leyendo quien de nosotros matara nahum en el siguiente cap">
     
-    <!-- IMPORTANTE: Usa una URL absoluta para la imagen (ej: 1200x200 píxeles para mejor resultado) -->
-    <meta property="og:image" content="https://https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
-    <meta property="og:image:secure_url" content="https://https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
+    <!-- URLs corregidas sin duplicación de https:// y altura estándar recomendada (630px) para tarjetas ricas -->
+    <meta property="og:image" content="https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
+    <meta property="og:image:secure_url" content="https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="200">
+    <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Masacre en Dascord página web">
     <meta property="og:locale" content="es_ES">
 
@@ -48,7 +72,6 @@
     <meta name="twitter:description" content="La página oficial de &quot;Masacre en Dascord&quot; donde unos inadaptados sociales se la pasan leyendo quien de nosotros matara nahum en el siguiente cap">
     <meta name="twitter:image" content="https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
 
-
     <link rel="stylesheet" href="./css/style.css">
     
     <!-- Preloads (mantenidos para rendimiento) -->
@@ -58,13 +81,10 @@
 
 <body>
 
-    <!-- 1. CAPA DE FONDO: Canvas (Se dibuja al fondo del todo) -->
     <canvas id="smokeCanvas"></canvas>
-
-    <!-- 2. CAPA DE EFECTO: Viñeta (Se dibuja sobre el canvas) -->
+    
     <div id="vignette"></div>
 
-    <!-- 3. CAPA DE INTERFAZ: Menú Principal y UI (Se dibuja sobre los fondos) -->
     <div class="mainMenu">
         <div class="title-container">
             <img src="./assets/ui/titulo.svg" class="game-logo" alt="Logo">
@@ -105,4 +125,5 @@
 
 </body>
 
-</html>
+        </html>
+    
