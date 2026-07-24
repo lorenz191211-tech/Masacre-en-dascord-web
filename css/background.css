@@ -8,7 +8,7 @@
     background: #000;
 }
 
-/* Vignette para enmarcar los bordes 
+/* Vignette para enmarcar los bordes*/
 body::after {
     content: "";
     position: fixed;
@@ -21,4 +21,4 @@ body::after {
     );
     pointer-events: none;
     z-index: -90;
-}*/
+}
