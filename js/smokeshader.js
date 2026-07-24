@@ -156,24 +156,46 @@ uniform vec2  resolution;
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.vertexAttribPointer(posAttrLoc, 2, gl.FLOAT, false, 0, 0);
 
-    // 5. SISTEMA HÍBRIDO DINÁMICO DE UNIFORMS
-    function applyDynamicUniforms(currentTimeSec, currentCalculatedSpeed) {
-        const resLoc = gl.getUniformLocation(program, 'resolution');
-        if (resLoc) gl.uniform2f(resLoc, canvas.width, canvas.height);
+    // ---------------------------------------------------------
+    // 5. CACHÉ DE UNIFORMS (Optimización principal)
+    // ---------------------------------------------------------
+    
+    const uniformCache = [];
+    const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
 
-        const timeLoc = gl.getUniformLocation(program, 'time');
+    for (let i = 0; i < numUniforms; i++) {
+        const info = gl.getActiveUniform(program, i);
+        if (!info) continue;
+        
+        const name = info.name;
+        // Pre-calculamos si es un color para evitar procesar strings en cada frame
+        const isColor = name.toLowerCase().includes('color') || name.toLowerCase().includes('col');
+        
+        uniformCache.push({
+            name: name,
+            type: info.type,
+            loc: gl.getUniformLocation(program, name),
+            isColor: isColor
+        });
+    }
+
+    // Cacheamos las ubicaciones nativas directamente
+    const resLoc = gl.getUniformLocation(program, 'resolution');
+    const timeLoc = gl.getUniformLocation(program, 'time');
+
+    // SISTEMA HÍBRIDO DINÁMICO DE UNIFORMS (Ahora lee del caché)
+    function applyDynamicUniforms(currentTimeSec, currentCalculatedSpeed) {
+        if (resLoc) gl.uniform2f(resLoc, canvas.width, canvas.height);
         if (timeLoc) gl.uniform1f(timeLoc, currentTimeSec);
 
-        // Diccionario universal y puente de nombres (Conecta JSON con las variables del Shader GD)
+        // Diccionario universal y puente de nombres
         const availableValues = {
-            // Puente para tu shader de humo actual (Godot)
             colorA: cfg.colores?.base || [0.2, 0.0, 0.1],
             colorB: cfg.colores?.medio || [0.7, 0.3, 0.4],
             colorC: cfg.colores?.brillante || [1.0, 0.2, 0.4],
             speed: currentCalculatedSpeed,
             discomode: cfg.discomode ? 1 : 0,
 
-            // Variables de respaldo por si utilizas otros shaders en el futuro
             u_frequency: cfg.frecuencia ?? 1.0,
             u_zoom: cfg.transformacion?.zoom ?? 1.0,
             u_rotation: cfg.transformacion?.rotacion ?? 0.0,
@@ -192,30 +214,25 @@ uniform vec2  resolution;
             u_vignetteMin: cfg.extras?.oscuridadVineta ?? 0.35
         };
 
-        // Inspección automática de uniforms activos en el programa compilado
-        const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-        for (let i = 0; i < numUniforms; i++) {
-            const info = gl.getActiveUniform(program, i);
-            if (!info) continue;
-            const name = info.name;
-            const loc = gl.getUniformLocation(program, name);
+        // Iterar sobre el array cacheados en lugar de interrogar a WebGL
+        for (let i = 0; i < uniformCache.length; i++) {
+            const u = uniformCache[i];
             
-            if (availableValues[name] !== undefined) {
-                const val = availableValues[name];
+            if (availableValues[u.name] !== undefined) {
+                const val = availableValues[u.name];
+                
                 if (Array.isArray(val)) {
                     if (val.length === 3) {
-                        // Corrección de gamma sRGB -> Linear para recuperar el brillo y tono original de Godot
-                        const isColor = name.toLowerCase().includes('color') || name.toLowerCase().includes('col');
-                        const processedVal = isColor ? val.map(c => Math.pow(Math.max(0, c), 2.2)) : val;
-                        gl.uniform3fv(loc, processedVal);
+                        const processedVal = u.isColor ? val.map(c => Math.pow(Math.max(0, c), 2.2)) : val;
+                        gl.uniform3fv(u.loc, processedVal);
                     } else if (val.length === 2) {
-                        gl.uniform2fv(loc, val);
+                        gl.uniform2fv(u.loc, val);
                     }
                 } else if (typeof val === 'number') {
-                    if (info.type === gl.INT || info.type === gl.BOOL) {
-                        gl.uniform1i(loc, val);
+                    if (u.type === gl.INT || u.type === gl.BOOL) {
+                        gl.uniform1i(u.loc, val);
                     } else {
-                        gl.uniform1f(loc, val);
+                        gl.uniform1f(u.loc, val);
                     }
                 }
             }
@@ -263,3 +280,4 @@ uniform vec2  resolution;
 
     requestAnimationFrame(render);
 })();
+                
