@@ -1,9 +1,25 @@
 AudioManager.init();
 
-document.getElementById("music-btn").onclick = () => {
-    AudioManager.toggle();
-};
 document.addEventListener("DOMContentLoaded", () => {
+    // --- CARGAR SUBTÍTULO ALEATORIO DESDE JSON ---
+    const subtituloElement = document.getElementById("game-subtitle");
+
+    if (subtituloElement) {
+        fetch("./js/subtitulos.json") // Asegurate de poner la ruta correcta si está dentro de una carpeta
+            .then(response => response.json())
+            .then(data => {
+                const lista = data.subtitulos;
+                if (lista && lista.length > 0) {
+                    const indiceAleatorio = Math.floor(Math.random() * lista.length);
+                    subtituloElement.textContent = lista[indiceAleatorio];
+                }
+            })
+            .catch(error => {
+                console.error("No se pudo cargar el archivo de subtítulos:", error);
+                subtituloElement.textContent = "El sitio web"; // Texto por defecto si falla
+            });
+    }
+
     // --- CONTROL DE MÚSICA E ICONO ---
     const musicBtn = document.getElementById("music-btn");
     const musicIcon = document.getElementById("music-icon");
@@ -34,6 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("retroTVMode") === "true") {
             document.body.classList.add("retro-tv");
             tvBtn.classList.add("active");
+        }
+    }
+});
         }
     }
 });
