@@ -1,4 +1,4 @@
-/*==================================================
+    /*==================================================
     GOOGLE FONT / LOCAL FONTS
 ==================================================*/
 
@@ -8,7 +8,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
     font-family: "botones";
     src: url("../assets/fonts/Perfect DOS VGA 437 Win.ttf") format("truetype");
@@ -25,21 +24,38 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 html,
 body {
     width: 100%;
-    height: 100%;
+    height: 100vh; /* Fallback para navegadores antiguos */
+    height: 100dvh; /* Altura dinámica real (evita que la barra de Safari tape cosas) */
     overflow: hidden;
 }
-
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #000;
     color: #000;
-    user-select: none;
+    
+    /* Soporte completo para evitar selección en todos los navegadores */
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none; /* Evita el menú contextual al mantener presionado en iOS */
+}
+
+/*==================================================
+    CANVAS DE FONDO (HUMO)
+==================================================*/
+
+#smokeCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: -100;
 }
 
 /*==================================================
@@ -65,7 +81,32 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 100;
+    /* Respetar el área segura de dispositivos con "Notch" */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
+
+/*==================================================
+    VIÑETA DE FONDO
+==================================================*/
+
+#vignette {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: radial-gradient(
+        circle at center,
+        transparent 20%,
+        rgba(0, 0, 0, 0.65) 85%,
+        rgba(0, 0, 0, 0.98) 100%
+    );
+    pointer-events: none; 
+    z-index: -10; 
+    /* translate3d es más estable que translateZ en Safari para forzar la GPU */
+    transform: translate3d(0, 0, 0); 
+}
+
 
 /*==================================================
     UTILIDADES
@@ -74,17 +115,14 @@ body {
 .hidden {
     display: none !important;
 }
-
 .fade {
     transition: opacity .3s;
 }
-
 .center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 .full {
     width: 100%;
     height: 100%;
@@ -101,9 +139,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* <-- CAMBIO: Fuerza al título a ir hacia arriba */
     gap: 5vh; 
-    animation: menuFade .8s ease;  
+    animation: menuFade .8s ease;
+    will-change: opacity; 
 }
 
 @keyframes menuFade {
@@ -125,23 +164,20 @@ body {
     margin-top: 3vmin;
     z-index: 101;
 }
-
 .game-logo {
-    /* Aumentado de 80vmin a 90vmin, y de 620px a 720px */
     width: min(100vmin, 820px);
+    max-width: 90vw; /* Evita que desborde lateralmente en pantallas muy estrechas */
     height: auto;
     object-fit: contain;
 }
-
 .game-subtitle {
     margin-top: -5vmin;
     font-family: "subtitulo", monospace;
     font-size: clamp(1.2rem, 5.7vmin, 2.5rem);
     color: #f4000a;
+    text-align: center;
 }
-
 hr {
-    /* Línea más ancha, acompañando al logo */
     width: min(90vmin, 600px);
     margin-top: 3vmin;
     border: none;
@@ -159,6 +195,7 @@ hr {
     gap: 1.5vh;
     width: 100%;
     touch-action: none; 
+    
 }
 
 .gameMenu button {
@@ -167,9 +204,10 @@ hr {
     outline: none;
     color: #cebdbd;
     font-family: "botones", monospace;
-    /* Botones más grandes (de 4.5vmin a 5.5vmin, de 2.2rem a 2.8rem) */
     font-size: clamp(1.6rem, 9vmin, 3rem);
     cursor: pointer;
+    /* Mejora la legibilidad de la fuente pixelada en Mac/iOS */
+    -webkit-font-smoothing: none; 
 }
 
 /*==================================================
@@ -191,8 +229,9 @@ hr {
     border: none;
     outline: none;
     position: fixed;
-    bottom: 20px;
-    width: 55px; /* Ligeramente más grandes */
+    /* env() asegura que no queden tapados por la barra inferior de iPhone/Android */
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    width: 55px; 
     height: 55px;
     display: flex;
     align-items: center;
@@ -201,31 +240,26 @@ hr {
     z-index: 998;
     padding: 0;
 }
-
 #music-btn {
-    right: 20px;
+    right: calc(20px + env(safe-area-inset-right));
 }
-
 #tv-btn {
-    right: 90px; /* Ajustado por el nuevo tamaño */
+    right: calc(90px + env(safe-area-inset-right)); 
 }
-
-#music-btn img {
+#music-btn img, #tv-btn img {
     width: 80%;
     height: 80%;
     object-fit: contain;
-    image-rendering: pixelated;
+    /* Compatibilidad total para pixel art en todos los motores web */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+    image-rendering: pixelated;
     pointer-events: none;
 }
-
 #tv-btn img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
-    pointer-events: none;
 }
 
 /*==================================================
@@ -238,19 +272,18 @@ hr {
     inset: 0;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     pointer-events: none;
     z-index: 999;
-    background: 
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
-        radial-gradient(circle, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.75) 100%);
-        
-    /* EL ARREGLO: 0.4vh garantiza la misma densidad de líneas en 4K y Móviles */
-    background-size: 100% 0.4vh, 100% 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+    /* Uso de píxeles en lugar de vh para líneas consistentes en cualquier pantalla */
+    background-size: 100% 4px; 
 }
 
 body.retro-tv {
     filter: contrast(1.15) brightness(1.05) sepia(0.15) hue-rotate(-5deg);
     animation: crt-flicker 0.15s infinite;
+    will-change: filter; /* Evita caídas de FPS en móviles al usar filtros CSS */
 }
 
 body.retro-tv #crt-overlay {
@@ -263,17 +296,17 @@ body.retro-tv #crt-overlay {
     100% { opacity: 0.98; }
 }
 
-
 /*==================================================
     VERSION
 ==================================================*/
 
 .version {
     position: absolute;
-    left: 20px;
-    bottom: 20px;
+    /* env() para alejarlo de los bordes redondeados/notch */
+    left: calc(20px + env(safe-area-inset-left));
+    bottom: calc(20px + env(safe-area-inset-bottom));
     font-family: monospace;
-    font-size: .95rem; /* Letra un poquito más grande */
+    font-size: .95rem; 
     color: #666;
     letter-spacing: 1px;
     opacity: .9;
@@ -287,13 +320,10 @@ body.retro-tv #crt-overlay {
     .mainMenu {
         gap: 3vh;
     }
-
     .gameMenu {
         gap: 1vh;
-    }
-
+    }    
     .gameMenu button {
-        /* Escalado también para celulares en horizontal */
         font-size: clamp(1.3rem, 6vmin, 2.2rem);
     }
 }
@@ -306,5 +336,4 @@ body.retro-tv #crt-overlay {
     .gameMenu button {
         -webkit-tap-highlight-color: transparent;
     }
-        }
-    
+    }
