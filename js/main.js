@@ -7,39 +7,40 @@ if (typeof AudioManager !== "undefined" && typeof AudioManager.init === "functio
     }
 }
 
-// --- 1. CARGAR SUBTÍTULO ALEATORIO DESDE JSON ---
+// --- 1. CARGAR SUBTÍTULO ALEATORIO DESDE JSON (CON RESPALDO INSTANTÁNEO) ---
 async function cargarSubtitulos() {
     const subtituloElement = document.getElementById("game-subtitle");
     if (!subtituloElement) return;
 
-    // Respaldo por si el JSON falla
+    // Frases de respaldo para visualización instantánea sin demora de red
     const frasesRespaldo = [
         "Nahum saca cap",
         "El sitio web"
     ];
 
+    // Mostrar un subtítulo al instante para eliminar cualquier retraso visual
+    const indiceRespaldo = Math.floor(Math.random() * frasesRespaldo.length);
+    subtituloElement.textContent = frasesRespaldo[indiceRespaldo];
+
     try {
+        // Cargar el JSON en segundo plano de manera optimizada para navegadores estrictos como Brave
         const response = await fetch("./js/subtitulos.json", { cache: "no-store" });
         if (!response.ok) throw new Error("Error HTTP: " + response.status);
         
         const data = await response.json();
         const lista = data?.subtitulos;
 
+        // Si el JSON responde correctamente, reemplaza el texto de forma fluida
         if (Array.isArray(lista) && lista.length > 0) {
             const indiceAleatorio = Math.floor(Math.random() * lista.length);
             subtituloElement.textContent = lista[indiceAleatorio];
-            return;
         }
     } catch (error) {
-        console.warn("No se pudo cargar el JSON de subtítulos, usando respaldo:", error);
+        console.warn("No se pudo cargar el JSON de subtítulos, manteniendo respaldo:", error);
     }
-
-    // Respaldo automático si falla el fetch
-    const indiceAleatorio = Math.floor(Math.random() * frasesRespaldo.length);
-    subtituloElement.textContent = frasesRespaldo[indiceAleatorio];
 }
 
-// Ejecutar la carga del subtítulo de forma segura
+// Ejecutar de forma inmediata asegurando compatibilidad con múltiples dispositivos
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", cargarSubtitulos);
 } else {
@@ -55,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const musicIcon = document.getElementById("music-icon");
 
     if (musicBtn) {
-        // Uso de 'pointerup' o 'click' optimizado para evitar retrasos y bloqueos en móviles y Brave
         musicBtn.addEventListener("click", () => {
             if (typeof AudioManager !== "undefined" && typeof AudioManager.toggle === "function") {
                 try {
@@ -74,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const tvBtn = document.getElementById("tv-btn");
 
     if (tvBtn) {
-        // Manejo seguro de localStorage por restricciones de privacidad estrictas en Brave/Safari
         let savedTVState = null;
         try {
             savedTVState = localStorage.getItem("retroTVMode");
@@ -82,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("localStorage no disponible o bloqueado:", e);
         }
 
-        // Si ya existe un registro previo, respeta la elección del usuario ("true" o "false").
+        // Inicia en true por defecto la primera vez, respetando cambios posteriores
         const isInitialRetro = savedTVState === null ? true : savedTVState === "true";
 
         if (isInitialRetro) {
@@ -93,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
             tvBtn.classList.remove("active");
         }
 
-        // Evento de clic unificado para todos los navegadores
         tvBtn.addEventListener("click", () => {
             const isRetro = document.body.classList.toggle("retro-tv");
             tvBtn.classList.toggle("active", isRetro);
@@ -101,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 localStorage.setItem("retroTVMode", isRetro);
             } catch (e) {
-                // Previene que colapse la app si el navegador bloquea el almacenamiento local
+                // Previene fallos si el navegador bloquea el almacenamiento local
             }
         });
     }
