@@ -1,6 +1,6 @@
 {
   "archivoShader": "humo.txt",
-  "frecuencia": 7.0,
+  "frecuencia": 1.0,
   "velocidad": 1.0,
   "oscilacion": {
     "habilitado": false,
@@ -14,7 +14,7 @@
   "usarColoresPersonalizados": true
  ,
   "colores": {
-    "base": [0.21, 0.06, 0.06],
+    "base": [1, 0.12, 0.15],
     "medio": [0.65, 0.12, 0.08],
     "brillante": [1.0, 0.45, 0.15],
     "brillo": 1.0,
