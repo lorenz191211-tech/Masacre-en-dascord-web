@@ -12,7 +12,7 @@ window.AudioManager = {
 
     volume: 0.45,
 
-    src: "./assets/audios/DarrellBoss.ogg",
+    src: "./assets/audios/Menu.ogg",
 
     init() {
 
