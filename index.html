@@ -8,11 +8,9 @@
     <meta name="color-scheme" content="dark">
     <title>Med Web</title>
 
-    <link rel="stylesheet" href="./css/background.css">
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="preload" href="./js/config.json" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="./js/subtitulos.json" as="fetch" crossorigin="anonymous">
-    <link rel="preload" href="./assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="js/config.json" as="fetch" crossorigin="anonymous">
+<link rel="preload" href="assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
@@ -26,11 +24,11 @@
 </div>
 
         <div class="gameMenu">
-            <button>EL FANFIC</button>
-            <button>EL JUEGO</button>
-            <button>ZONA ARCADE</button>
+            <button>FANFIC</button>
+            <button>JUEGO</button>
+            <button>ARCADE</button>
             <button>DOCUMENTACION</button>
-            <button>EXTRAS</button></button>
+            <button>EXTRAS</button>
         </div>
 
         
@@ -49,6 +47,10 @@
 
 <!-- Capa para el efecto visual de líneas de escaneo (CRT) -->
 <div id="crt-overlay" class="crt-overlay"></div>
+
+<!-- Orden recomendado en tu `body` -->
+
+<div id="vignette"></div> <!-- NUEVO DIV -->
 
  <!-- Fondo en Canvas para simular el Shader exacto del juego -->
 <canvas id="smokeCanvas"></canvas>
