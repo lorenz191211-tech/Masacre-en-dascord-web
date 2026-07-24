@@ -3,62 +3,74 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Adaptabilidad y zonas seguras (Notch) para iOS y Android -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- Compatibilidad forzada para usar el motor de renderizado más moderno en navegadores basados en Chromium/Edge -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- Optimizaciones de App Web para Móviles (PWA) -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
     <meta name="color-scheme" content="dark">
+    
+    <!-- SEO Básico -->
+    <meta name="description" content="Med Web - Descargas, guía y versiones">
+    
     <title>Med Web</title>
 
     <link rel="stylesheet" href="./css/style.css">
-    <link rel="preload" href="js/config.json" as="fetch" crossorigin="anonymous">
-<link rel="preload" href="assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
+    
+    <!-- Preloads (mantenidos para rendimiento) -->
+    <link rel="preload" href="./js/config.json" as="fetch" crossorigin="anonymous">
+    <link rel="preload" href="./assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
 </head>
 
 <body>
 
-    <!-- MENÚ PRINCIPAL -->
+    <!-- 1. CAPA DE FONDO: Canvas (Se dibuja al fondo del todo) -->
+    <canvas id="smokeCanvas"></canvas>
+
+    <!-- 2. CAPA DE EFECTO: Viñeta (Se dibuja sobre el canvas) -->
+    <div id="vignette"></div>
+
+    <!-- 3. CAPA DE INTERFAZ: Menú Principal y UI (Se dibuja sobre los fondos) -->
     <div class="mainMenu">
         <div class="title-container">
-    <img src="./assets/ui/titulo.svg" class="game-logo" alt="Logo">
-    <h2 id="game-subtitle" class="game-subtitle"></h2>
-    <hr>
-</div>
+            <img src="./assets/ui/titulo.svg" class="game-logo" alt="Logo">
+            <h2 id="game-subtitle" class="game-subtitle"></h2>
+            <hr>
+        </div>
 
         <div class="gameMenu">
             <button>FANFIC</button>
             <button>JUEGO</button>
             <button>ARCADE</button>
-            <button>DOCUMENTACION</button>
-            <button>EXTRAS</button>
+            <button>DISCORD</button>
+            <button>CREDITOS</button>
         </div>
+    </div>
 
+    <!-- CONTROLES DE LA UI -->
+    <div class="ui-controls">
+        <!-- Botón de música -->
+        <button id="music-btn" class="ui-btn" title="Música">
+            <img id="music-icon" src="./assets/ui/musicoff.png" alt="Música">
+        </button>
         
-<!-- CONTROLES DE LA UI -->
-<div class="ui-controls">
-    <!-- Botón de música -->
-    <button id="music-btn" class="ui-btn" title="Música">
-        <img id="music-icon" src="./assets/ui/musicoff.png" alt="Música">
-    </button>
-    
-    <!-- Botón para TV Retro -->
-    <button id="tv-btn" class="ui-btn" title="Activar/Desactivar TV Retro">
-        <img id="tv-icon" src="./assets/ui/tv.png" alt="TV Retro">
-    </button>
-</div>
+        <!-- Botón para TV Retro -->
+        <button id="tv-btn" class="ui-btn" title="Activar/Desactivar TV Retro">
+            <img id="tv-icon" src="./assets/ui/tv.png" alt="TV Retro">
+        </button>
+    </div>
 
-<!-- Capa para el efecto visual de líneas de escaneo (CRT) -->
-<div id="crt-overlay" class="crt-overlay"></div>
+    <!-- 4. CAPA FRONTAL: Efecto visual CRT (Cubre absolutamente todo) -->
+    <div id="crt-overlay" class="crt-overlay"></div>
 
-<!-- Orden recomendado en tu `body` -->
-
-<div id="vignette"></div> <!-- NUEVO DIV -->
-
- <!-- Fondo en Canvas para simular el Shader exacto del juego -->
-<canvas id="smokeCanvas"></canvas>
-
-<div class="mainMenu">
-    <!-- Tu menú aquí -->
-</div>
-
+    <!-- SCRIPTS -->
     <script src="./js/audio.js" defer></script>
     <script src="./js/puntero.js" defer></script>
     <script src="./js/main.js" defer></script>
