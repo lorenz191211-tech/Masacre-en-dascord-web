@@ -1,106 +1,361 @@
-// Inicializar el AudioManager de forma independiente con control de errores seguro
-if (typeof AudioManager !== "undefined" && typeof AudioManager.init === "function") {
-    try {
-        AudioManager.init();
-    } catch (e) {
-        console.warn("Error al inicializar AudioManager:", e);
-    }
-}
+/*
+==================================================
+    INICIALIZACIÓN DEL AUDIO
+==================================================
+*/
 
-// --- 1. CARGAR SUBTÍTULO ALEATORIO DESDE JSON (CON RESPALDO INSTANTÁNEO) ---
-async function cargarSubtitulos() {
-    const subtituloElement = document.getElementById("game-subtitle");
-    if (!subtituloElement) return;
+try {
 
-    // Frases de respaldo para visualización instantánea sin demora de red
-    const frasesRespaldo = [
-        "Nahum saca cap",
-        "El sitio web"
-    ];
+    window.AudioManager?.init?.();
 
-    // Mostrar un subtítulo al instante para eliminar cualquier retraso visual
-    const indiceRespaldo = Math.floor(Math.random() * frasesRespaldo.length);
-    subtituloElement.textContent = frasesRespaldo[indiceRespaldo];
+} catch (e) {
 
-    try {
-        // Cargar el JSON en segundo plano de manera optimizada para navegadores estrictos como Brave
-        const response = await fetch("./js/subtitulos.json", { cache: "no-store" });
-        if (!response.ok) throw new Error("Error HTTP: " + response.status);
-        
-        const data = await response.json();
-        const lista = data?.subtitulos;
+    console.warn("Error al inicializar AudioManager:", e);
 
-        // Si el JSON responde correctamente, reemplaza el texto de forma fluida
-        if (Array.isArray(lista) && lista.length > 0) {
-            const indiceAleatorio = Math.floor(Math.random() * lista.length);
-            subtituloElement.textContent = lista[indiceAleatorio];
-        }
-    } catch (error) {
-        console.warn("No se pudo cargar el JSON de subtítulos, manteniendo respaldo:", error);
-    }
-}
-
-// Ejecutar de forma inmediata asegurando compatibilidad con múltiples dispositivos
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", cargarSubtitulos);
-} else {
-    cargarSubtitulos();
 }
 
 
-// --- 2. CONTROLES DE BOTONES (MÚSICA Y TV) ---
+/*
+==================================================
+    INTERFAZ
+==================================================
+*/
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Control de Música e Ícono
-    const musicBtn = document.getElementById("music-btn");
-    const musicIcon = document.getElementById("music-icon");
 
-    if (musicBtn) {
-        musicBtn.addEventListener("click", () => {
-            if (typeof AudioManager !== "undefined" && typeof AudioManager.toggle === "function") {
-                try {
-                    const isPlaying = AudioManager.toggle(); 
-                    if (musicIcon) {
-                        musicIcon.src = isPlaying ? "./assets/ui/musicon.png" : "./assets/ui/musicoff.png";
+    /*
+    ==============================================
+        ELEMENTOS
+    ==============================================
+    */
+
+    const subtitle =
+        document.getElementById("game-subtitle");
+
+    const musicBtn =
+        document.getElementById("music-btn");
+
+    const musicIcon =
+        document.getElementById("music-icon");
+
+    const tvBtn =
+        document.getElementById("tv-btn");
+
+    const backBtn =
+        document.getElementById("back-btn");
+
+    const menuButtons =
+        document.querySelectorAll(".gameMenu button");
+
+    const submenus =
+        document.querySelectorAll(".submenu");
+
+    let submenuActual = null;
+
+
+
+    /*
+    ==============================================
+        SUBTÍTULOS
+    ==============================================
+    */
+
+    async function cargarSubtitulos() {
+
+        if (!subtitle) return;
+
+        const respaldo = [
+
+            "Nahum saca cap",
+
+            "El sitio web"
+
+        ];
+
+        subtitle.textContent =
+            respaldo[
+                Math.floor(
+                    Math.random() * respaldo.length
+                )
+            ];
+
+        try {
+
+            const response =
+                await fetch(
+                    "./js/subtitulos.json",
+                    {
+                        cache: "no-store"
                     }
-                } catch (e) {
-                    console.warn("Error al alternar audio:", e);
-                }
+                );
+
+            if (!response.ok)
+                throw new Error(response.status);
+
+            const data =
+                await response.json();
+
+            if (
+
+                Array.isArray(data.subtitulos) &&
+                data.subtitulos.length
+
+            ) {
+
+                subtitle.textContent =
+                    data.subtitulos[
+                        Math.floor(
+                            Math.random() *
+                            data.subtitulos.length
+                        )
+                    ];
+
             }
-        });
+
+        }
+
+        catch (err) {
+
+            console.warn(
+                "No se pudieron cargar los subtítulos.",
+                err
+            );
+
+        }
+
     }
 
-    // Control de TV Retro
-    const tvBtn = document.getElementById("tv-btn");
+    cargarSubtitulos();
+
+
+
+    /*
+    ==============================================
+        MÚSICA
+    ==============================================
+    */
+
+    musicBtn?.addEventListener("click", () => {
+
+        try {
+
+            const activo =
+                window.AudioManager?.toggle?.();
+
+            if (musicIcon) {
+
+                musicIcon.src =
+
+                    activo ?
+
+                    "./assets/ui/musicon.png"
+
+                    :
+
+                    "./assets/ui/musicoff.png";
+
+            }
+
+        }
+
+        catch (e) {
+
+            console.warn(e);
+
+        }
+
+    });
+
+
+
+    /*
+    ==============================================
+        TV RETRO
+    ==============================================
+    */
 
     if (tvBtn) {
-        let savedTVState = null;
+
+        let retro = true;
+
         try {
-            savedTVState = localStorage.getItem("retroTVMode");
-        } catch (e) {
-            console.warn("localStorage no disponible o bloqueado:", e);
+
+            const saved =
+                localStorage.getItem(
+                    "retroTVMode"
+                );
+
+            if (saved !== null) {
+
+                retro =
+                    saved === "true";
+
+            }
+
         }
 
-        // Inicia en true por defecto la primera vez, respetando cambios posteriores
-        const isInitialRetro = savedTVState === null ? true : savedTVState === "true";
+        catch (e) {}
 
-        if (isInitialRetro) {
-            document.body.classList.add("retro-tv");
-            tvBtn.classList.add("active");
-        } else {
-            document.body.classList.remove("retro-tv");
-            tvBtn.classList.remove("active");
+
+
+        function aplicarRetro(activo) {
+
+            document.body.classList.toggle(
+
+                "retro-tv",
+
+                activo
+
+            );
+
+            tvBtn.classList.toggle(
+
+                "active",
+
+                activo
+
+            );
+
         }
+
+
+
+        aplicarRetro(retro);
+
+
 
         tvBtn.addEventListener("click", () => {
-            const isRetro = document.body.classList.toggle("retro-tv");
-            tvBtn.classList.toggle("active", isRetro);
-            
+
+            retro = !retro;
+
+            aplicarRetro(retro);
+
             try {
-                localStorage.setItem("retroTVMode", isRetro);
-            } catch (e) {
-                // Previene fallos si el navegador bloquea el almacenamiento local
+
+                localStorage.setItem(
+
+                    "retroTVMode",
+
+                    retro
+
+                );
+
             }
+
+            catch (e) {}
+
         });
+
     }
+
+
+
+    /*
+    ==============================================
+        SUBMENÚS
+    ==============================================
+    */
+
+    function cerrarTodos() {
+
+        submenus.forEach(menu => {
+
+            menu.classList.add("hidden");
+
+        });
+
+    }
+
+
+
+    function abrirSubmenu(id) {
+
+        cerrarTodos();
+
+        const submenu =
+            document.getElementById(id);
+
+        if (!submenu) return;
+
+        submenu.classList.remove("hidden");
+
+        submenuActual = submenu;
+
+        document.body.classList.add(
+
+            "submenu-active"
+
+        );
+
+        backBtn?.classList.remove("hidden");
+
+    }
+
+
+
+    function volverMenu() {
+
+        cerrarTodos();
+
+        submenuActual = null;
+
+        document.body.classList.remove(
+
+            "submenu-active"
+
+        );
+
+        backBtn?.classList.add("hidden");
+
+    }
+
+
+
+    /*
+    ==============================================
+        EVENTOS MENÚ
+    ==============================================
+    */
+
+    menuButtons.forEach(btn => {
+
+        btn.addEventListener("click", () => {
+
+            const destino =
+                btn.dataset.target;
+
+            const url =
+                btn.dataset.url;
+
+            if (destino) {
+
+                abrirSubmenu(destino);
+
+                return;
+
+            }
+
+            if (url) {
+
+                window.location.href =
+
+                    url;
+
+            }
+
+        });
+
+    });
+
+
+
+    backBtn?.addEventListener(
+
+        "click",
+
+        volverMenu
+
+    );
+
 });
