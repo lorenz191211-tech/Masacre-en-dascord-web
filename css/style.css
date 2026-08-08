@@ -1,5 +1,5 @@
 /*==================================================
-GOOGLE FONT / LOCAL FONTS
+  GOOGLE FONT / LOCAL FONTS
 ==================================================*/
 @font-face {
   font-family: "subtitulo";
@@ -16,7 +16,7 @@ GOOGLE FONT / LOCAL FONTS
 }
 
 /*==================================================
-RESET
+  RESET & ROOT VARIABLES
 ==================================================*/
 * {
   margin: 0;
@@ -25,7 +25,7 @@ RESET
 }
 
 :root {
-  --text: #ffffff;
+  --text: #cebdbd;
   --background: #000000;
   --accent: #f4000a;
   --accentGlow: #ff2a2a;
@@ -47,7 +47,6 @@ body {
   color: var(--text);
   background: var(--background);
   overscroll-behavior: none;
-  
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -57,7 +56,7 @@ body {
 }
 
 /*==================================================
-CANVAS DE FONDO
+  CANVAS DE FONDO & VIÑETA
 ==================================================*/
 #smokeCanvas {
   position: fixed;
@@ -68,9 +67,6 @@ CANVAS DE FONDO
   z-index: -100;
 }
 
-/*==================================================
-VIÑETA
-==================================================*/
 #vignette {
   position: fixed;
   inset: 0;
@@ -78,10 +74,15 @@ VIÑETA
   z-index: -10;
   background: radial-gradient(circle at center, transparent 20%, rgba(0,0,0,.65) 85%, rgba(0,0,0,.98) 100%);
   transform: translate3d(0,0,0);
+  transition: background 1s ease; 
+}
+
+body.menu-secreto-activo #vignette {
+  background: radial-gradient(circle at center, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.78) 40%, #000000 100%);
 }
 
 /*==================================================
-UTILIDADES
+  UTILIDADES
 ==================================================*/
 .hidden { display: none !important; }
 .fade { transition: opacity .3s; }
@@ -89,7 +90,7 @@ UTILIDADES
 .full { width: 100%; height: 100%; }
 
 /*==================================================
-APP (Contenedor Maestro Adaptativo)
+  APP (Contenedor Maestro Adaptativo)
 ==================================================*/
 #app {
   position: absolute;
@@ -111,7 +112,7 @@ APP (Contenedor Maestro Adaptativo)
 }
 
 /*==================================================
-MENU PRINCIPAL
+  MENU PRINCIPAL Y ENCABEZADO
 ==================================================*/
 .mainMenu {
   width: 100%;
@@ -133,9 +134,6 @@ MENU PRINCIPAL
   to { opacity: 1; }
 }
 
-/*==================================================
-ENCABEZADO (Textos posicionados más arriba)
-==================================================*/
 .title-container {
   width: 100%;
   max-width: 100%;
@@ -144,7 +142,6 @@ ENCABEZADO (Textos posicionados más arriba)
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  /* Posicionado más arriba */
   margin-top: 1vmin; 
   z-index: 100;
   flex-shrink: 0;
@@ -159,11 +156,9 @@ ENCABEZADO (Textos posicionados más arriba)
 }
 
 .game-subtitle {
-  /* Más cerca del logo para empujarlo hacia arriba */
-  margin-top: -6.5vmin; 
+  margin-top: -4.5vmin; 
   font-family: "subtitulo", monospace;
-  /* Textos grandes */
-  font-size: clamp(1.4rem, 6.5vmin, 3rem); 
+  font-size: clamp(1.4rem, 6vmin, 3rem); 
   color: var(--accent);
   line-height: 1;
   text-align: center;
@@ -178,7 +173,7 @@ hr {
 }
 
 /*==================================================
-ÁREA CENTRAL
+  ÁREA CENTRAL Y BOTONES DE MENÚ
 ==================================================*/
 .content-area {
   position: relative;
@@ -192,9 +187,6 @@ hr {
   overflow: hidden;
 }
 
-/*==================================================
-MENU BOTONES (Más arriba y con espaciado)
-==================================================*/
 .gameMenu {
   position: absolute;
   inset: 0;
@@ -203,9 +195,7 @@ MENU BOTONES (Más arriba y con espaciado)
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* Espaciado agregado entre botones */
   gap: 2.8vh; 
-  /* Desplaza los botones un poco más hacia arriba */
   transform: translateY(-6vh); 
   padding: 1rem;
   transition: opacity .3s ease, visibility .3s ease;
@@ -221,7 +211,6 @@ MENU BOTONES (Más arriba y con espaciado)
   outline: none;
   color: #cebdbd;
   font-family: "botones", monospace;
-  /* Tamaño equilibrado: grande pero no gigante */
   font-size: clamp(1.8rem, 10vmin, 3.5rem); 
   line-height: 0.5;
   letter-spacing: 1px;
@@ -231,14 +220,12 @@ MENU BOTONES (Más arriba y con espaciado)
   transition: color 0.2s, filter 0.2s;
 }
 
-.gameMenu button:hover,
 .gameMenu button.active-hover {
   color: #ffffff;
-  filter: brightness(1.2);
 }
 
 /*==================================================
-SUBMENUS
+  SUBMENÚS GENERALES
 ==================================================*/
 body.submenu-active .gameMenu {
   opacity: 0;
@@ -255,7 +242,6 @@ body.submenu-active .gameMenu {
   justify-content: flex-start;
   align-items: center;
   padding: clamp(1rem, 2vh, 1.5rem);
-  /* Se elimina el overflow aquí para delegarlo a la lista de invites */
   overflow: hidden; 
 }
 
@@ -268,25 +254,22 @@ body.submenu-active .gameMenu {
   text-align: center;
   line-height: 1.15;
   font-size: clamp(1.3rem, 4.2vmin, 2.2rem);
-  margin-bottom: 2vh; /* Da espacio antes del contenedor */
+  margin-bottom: 2vh;
   flex-shrink: 0;
 }
 
 /*==================================================
-CONTENEDOR DE INVITACIONES (Ajuste dinámico al alto)
+  CONTENEDOR DE INVITACIONES Y TARJETAS
 ==================================================*/
 .invites-container {
   width: 100%;
   max-width: min(94vw, 1050px);
   margin-inline: auto;
-  
-  /* HACE QUE SE AJUSTE AL ALTO Y SEA DESPLAZABLE SOLO SI ES NECESARIO */
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  align-content: flex-start; /* Evita que las tarjetas se estiren excesivamente si hay pocas */
-  
+  align-content: flex-start;
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(0.8rem, 2.2vh, 1.6rem);
@@ -294,7 +277,6 @@ CONTENEDOR DE INVITACIONES (Ajuste dinámico al alto)
   z-index: 950;
   box-sizing: border-box;
   padding-inline: clamp(.4rem, 1vw, .8rem);
-  /* Espaciado interno extra al final para scroll cómodo */
   padding-bottom: 2vh; 
 }
 
@@ -310,9 +292,6 @@ CONTENEDOR DE INVITACIONES (Ajuste dinámico al alto)
   }
 }
 
-/*==================================================
-TARJETAS DE INVITACIÓN (Textos aumentados)
-==================================================*/
 .invites-card {
   width: 100%;
   max-width: 100%;
@@ -425,7 +404,7 @@ TARJETAS DE INVITACIÓN (Textos aumentados)
 }
 
 /*==================================================
-FOOTER UI
+  FOOTER UI Y CONTROLES
 ==================================================*/
 .footer-ui {
   width: 100%;
@@ -444,23 +423,6 @@ FOOTER UI
   pointer-events: auto;
 }
 
-/*==================================================
-VERSION
-==================================================*/
-.version {
-  grid-column: 1;
-  justify-self: start;
-  color: #666;
-  font-family: monospace;
-  font-size: clamp(.8rem, 2vmin, 1rem);
-  letter-spacing: 1px;
-  opacity: .9;
-  white-space: nowrap;
-}
-
-/*==================================================
-BOTON REGRESAR (AHORA IDÉNTICO AL MENÚ)
-==================================================*/
 #back-btn {
   grid-column: 2;
   justify-self: center;
@@ -470,7 +432,6 @@ BOTON REGRESAR (AHORA IDÉNTICO AL MENÚ)
   padding: 0;
   color: #cebdbd;
   font-family: "botones", monospace;
-  /* Mismos valores que .gameMenu button */
   font-size: clamp(1.8rem, 10vmin, 3.5rem); 
   line-height: 0.5;
   letter-spacing: 1px;
@@ -480,7 +441,6 @@ BOTON REGRESAR (AHORA IDÉNTICO AL MENÚ)
   white-space: nowrap;
 }
 
-#back-btn:hover,
 #back-btn.active-hover {
   color: #ffffff;
   filter: brightness(1.2);
@@ -492,9 +452,6 @@ BOTON REGRESAR (AHORA IDÉNTICO AL MENÚ)
   pointer-events: none;
 }
 
-/*==================================================
-BOTONES UI (TV y Música)
-==================================================*/
 .footer-controls {
   grid-column: 3;
   justify-self: end;
@@ -517,14 +474,7 @@ BOTONES UI (TV y Música)
   align-items: center;
   cursor: pointer;
   touch-action: manipulation;
-  transition: transform .2s, filter .2s;
   flex-shrink: 0;
-}
-
-#tv-btn:hover,
-#music-btn:hover {
-  transform: scale(1.06);
-  filter: drop-shadow(0 0 8px rgba(255,0,0,.20));
 }
 
 #tv-btn img,
@@ -540,7 +490,7 @@ BOTONES UI (TV y Música)
 }
 
 /*==================================================
-CRT
+  EFECTO CRT / TV RETRO
 ==================================================*/
 #crt-overlay {
   display: none;
@@ -569,7 +519,147 @@ body.retro-tv #crt-overlay {
 }
 
 /*==================================================
-DISPOSITIVOS Y ORIENTACIÓN
+  EFECTOS VISUALES - MODO TÉTRICO / MENÚ SECRETO
+==================================================*/
+#music-btn, 
+#tv-btn, 
+.game-logo,
+#game-subtitle {
+    transition: all 1s ease;
+}
+
+body.menu-secreto-activo #music-btn,
+body.menu-secreto-activo #tv-btn,
+body.menu-secreto-activo #back-btn,
+body.menu-secreto-activo .game-logo {
+    filter: brightness(0.6); 
+}
+
+body.menu-secreto-activo #game-subtitle {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/*==================================================
+  TERMINAL SECRETA (INPUT DE CÓDIGOS & RESULTADOS)
+==================================================*/
+.terminal-container {
+  width: 100%;
+  max-width: min(90vw, 500px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2vh;
+}
+
+#codigo-input {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(10, 2, 2, 0.9);
+  border: 1px dashed rgba(255, 0, 0, 0.4);
+  color: #cebdbd;
+  font-family: "botones", monospace;
+  font-size: clamp(1rem, 3vmin, 1.3rem);
+  text-align: center;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#codigo-input:focus {
+  border-color: #f4000a;
+}
+
+#codigo-btn {
+  background: none;
+  border: none;
+  outline: none;
+  color: #cebdbd;
+  font-family: "botones", monospace;
+  font-size: clamp(1.8rem, 6vmin, 3.5rem); 
+  line-height: 0.5;
+  letter-spacing: 1px;
+  cursor: pointer;
+  -webkit-font-smoothing: none;
+  flex-shrink: 0;
+  transition: color 0.2s, filter 0.2s;
+}
+
+#codigo-btn:hover {
+  color: #ffffff;
+}
+
+.resultado-oculto {
+  padding: 1.2rem;
+  background: rgba(5, 2, 2, 0.95);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: #d6c2c2;
+  font-family: "botones", system-ui, -apple-system, sans-serif;
+  font-size: clamp(0.95rem, 2.2vmin, 1.15rem);
+  min-height: 80px;
+  border-radius: 8px;
+  text-align: center;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: pre-line;
+}
+/* ==================================================
+   PANTALLA DE INICIO (PRESS START)
+================================================== */
+.pantalla-inicio {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999; /* Por encima de todo */
+    opacity: 1;
+    transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out;
+    cursor: pointer;
+}
+
+.pantalla-inicio.oculto {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Permite hacer clic en la web de abajo una vez oculto */
+}
+
+.inicio-contenido {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.inicio-logo {
+    width: min(80vw, 350px);
+    height: auto;
+    filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.4));
+}
+
+.inicio-texto {
+    color: #ffffff;
+    font-family: 'botones', monospace;
+    font-size: clamp(0.9rem, 3vw, 1.2rem);
+    letter-spacing: 2px;
+    animation: parpadeoInicio 1.5s infinite ease-in-out;
+}
+
+@keyframes parpadeoInicio {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/*==================================================
+  MEDIA QUERIES & DISPOSITIVOS
 ==================================================*/
 @media(pointer:coarse) {
   .gameMenu button,
@@ -611,13 +701,5 @@ DISPOSITIVOS Y ORIENTACIÓN
   .mainMenu {
     max-width: 1400px;
     margin-inline: auto;
-  }
-}
-
-@media(prefers-reduced-motion:reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
   }
 }
