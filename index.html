@@ -47,6 +47,12 @@
     <meta name="twitter:image" content="https://lorenz191211-tech.github.io/Masacre-en-dascord-web/assets/ui/preview.png">
 
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/typewrite.css">
+    <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css" />
+    <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting-cells.css" />
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
 
     <link rel="preload" href="./js/config.json" as="fetch" crossorigin="anonymous">
     <link rel="preload" href="./assets/shaders/humo.txt" as="fetch" crossorigin="anonymous">
@@ -78,7 +84,8 @@
                     <button data-target="menu-juego">JUEGO</button>
                     <button data-target="menu-arcade">ARCADE</button>
                     <button data-target="menu-discord">DISCORD</button>
-                    <button data-target="menu-creditos">CRÉDITOS</button>
+                    <button data-target="menu-creditos">CREDITOS</button>
+                    <button id="btn-secreto" data-target="menu-secreto">CODIGOS</button>
                 </nav>
 
                 <section id="menu-fanfic" class="submenu hidden" aria-labelledby="menu-fanfic-title">
@@ -110,7 +117,7 @@
                             </div>
 
                             <p class="invites-desc">
-                                Servidor dedicada a la lectura del fanfic y las pajas mentalesde Nahum, aca se habla del fanfic y salen los nuevos capítulos.
+                                Comunidad dedicada a la lectura del fanfic, debate de teorías y nuevos capítulos.
                             </p>
 
                             <a href="https://discord.gg/TvBj5JMxkE" class="invites-btn" target="_blank" rel="noopener noreferrer">
@@ -121,18 +128,18 @@
                         <article class="invites-card">
                             <div class="invites-card-header">
                                 <img src="./assets/ui/favicon-16x16.png" class="invites-icon" alt="Icono del juego">
-                                <h3 class="invites-title" id="menu-discord-title-2">MASACRE EN DASCORD SERVIDOR</h3>
+                                <h3 class="invites-title" id="menu-discord-title-2">MASACRE EN DASCORD: EL JUEGO</h3>
                             </div>
 
                             <p class="invites-desc">
-                                Servidor oficial dedicado al desarrollo del videojuego MeD, la pagina web y demas proyectos relacionados a Masacre en Dascord.
+                                Servidor oficial dedicado al desarrollo del videojuego.
                             </p>
 
                             <a href="https://discord.gg/6kKk3PhWx7" class="invites-btn" target="_blank" rel="noopener noreferrer">
                                 UNIRSE AL SERVIDOR
                             </a>
                         </article>
-    <article class="invites-card">
+                        <article class="invites-card">
                             <div class="invites-card-header">
                                 <img src="./assets/ui/dascord-icon.png" class="invites-icon" alt="Icono del juego">
                                 <h3 class="invites-title"
@@ -147,7 +154,7 @@
                             <a href="https://discord.gg/6kKk3PhWx7" class="invites-btn" target="_blank" rel="noopener noreferrer">
                                 UNIRSE AL SERVIDOR
                             </a>
-    </article>
+                        </article>
                     </div>
                 </section>
 
@@ -157,6 +164,22 @@
                     </h2>
                 </section>
 
+                <section id="menu-secreto" class="submenu hidden"
+                aria-labelledby="menu-secreto-title">
+                    <h2 id="menu-secreto-title" style="color:white;font-family:'botones',monospace;">
+                        <div id="menu-secreto-contenido">
+  <h2>TERMINAL SECRETA</h2>
+  
+  <div class="terminal-container">
+    <input type="text" id="codigo-input" placeholder="INGRESA EL CÓDIGO..." autocomplete="off">
+    <button id="codigo-btn">DESCIFRAR</button>
+    
+    <div id="resultado-secreto" class="resultado-oculto"></div>
+  </div>
+</div>
+
+                    </h2>
+                </section>
             </section>
 
         </main>
@@ -184,7 +207,15 @@
     </div>
 
     <div id="crt-overlay" class="crt-overlay"></div>
+        <div id="pantalla-inicio" class="pantalla-inicio">
+        <div class="inicio-contenido">
+            <img src="./assets/ui/titulo.svg" class="inicio-logo" alt="Masacre en Dascord">
+            <p class="inicio-texto">Toca la pantalla para comenzar</p>
+        </div>
+    </div>
 
+
+    <script src="./js/typewriter.js" defer></script>
     <script src="./js/audio.js" defer></script>
     <script src="./js/puntero.js" defer></script>
     <script src="./js/main.js" defer></script>
