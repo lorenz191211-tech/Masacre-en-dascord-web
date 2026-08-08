@@ -3,7 +3,7 @@
    ================================================== */
 
 const TypewriterConfig = {
-    velocidadStagger: 0.04 // Segundos entre cada letra (menor es más rápido)
+    velocidadStagger: 0.12 // Segundos entre cada letra (menor es más rápido)
 };
 
 /**
