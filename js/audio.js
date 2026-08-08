@@ -11,7 +11,7 @@ window.AudioManager = {
     enSecreto: false,
     interactuado: false, // 🔒 Candado de seguridad táctil
     volume: 0.1,
-    srcNormal: "./assets/audios/menu.ogg",
+    srcNormal: "./assets/audios/Menu.ogg",
     srcSecreto: "./assets/audios/secreto.m4a", // ⚠️ Asegúrate del nombre correcto de tu pista secreta
 
     init() {
