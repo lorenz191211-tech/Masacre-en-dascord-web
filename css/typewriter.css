@@ -1,0 +1,45 @@
+/* ==========================================
+   ESTILOS DE EFECTOS PARA SPLITTING.JS + GSAP
+   ========================================== */
+
+.lectura {
+    white-space: pre-line;
+    word-break: break-word;
+}
+
+/* Forzar que cada carácter sea un bloque en línea y preserve los espacios */
+.char {
+    display: inline-block;
+    position: relative;
+    white-space: pre; /* <-- ESTO EVITA QUE LOS ESPACIOS SE COLAPSEN Y FORMEN "holamundo" */
+    will-change: transform, opacity;
+}
+
+/* Efecto Temblor (§~) - Ajustado con 'em' para adaptarse a cualquier resolución móvil */
+.efecto-temblor {
+    display: inline-block;
+}
+
+.efecto-temblor .char {
+    animation: typewriterTemblor 0.1s infinite ease-in-out;
+}
+
+@keyframes typewriterTemblor {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-0.05em, 0.05em); }
+    50%  { transform: translate(0.05em, -0.05em); }
+    75%  { transform: translate(-0.05em, -0.05em); }
+    100% { transform: translate(0.05em, 0.05em); }
+}
+
+/* Efecto Susurro (§%) */
+.efecto-susurro {
+    font-size: 0.75em;
+    opacity: 0.85;
+}
+
+/* Efecto Glitch (§-) */
+.efecto-glitch {
+    display: inline-block;
+    font-family: monospace;
+}
